@@ -355,7 +355,7 @@ impl BlockStore for FsBlockStore {
     }
 
     async fn list(&self) -> Result<Vec<Cid>, Error> {
-        use futures::future::{ready, Either};
+        use futures::future::{ready, Either, FutureExt};
         use futures::stream::{empty, TryStreamExt};
         use tokio_stream::wrappers::ReadDirStream;
 
@@ -394,6 +394,7 @@ impl BlockStore for FsBlockStore {
             Ok(vec)
         }
         .instrument(span)
+        .boxed()
         .await
     }
 
